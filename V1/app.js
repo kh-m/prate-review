@@ -1,5 +1,8 @@
 var express = require("express");
 var app = express();
+var bodyParser = require("body-parser");
+
+app.use(bodyParser.urlencoded({extended: true}))
 app.set("view engine", "ejs");
 
 app.get("/", function(req, res){
@@ -14,6 +17,10 @@ app.get("/campgrounds", function(req, res){
     ]
 
     res.render("campgrounds", {campGrounds: campGrounds});
+})
+
+app.post("/campgrounds", function(req, res){
+    res.send("you hit the post route.");
 })
 
 app.listen(8000, function(){
