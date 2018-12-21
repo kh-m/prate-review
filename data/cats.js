@@ -38,13 +38,27 @@ var Cat = mongoose.model("Cat", catSchema);
 // retrieve cats from database
 
 
-// Searches for cats in the database
-Cat.find({}, function (err, cats) {
-    if (err) {
-        console.log("SOMETHING WENT WRONG!")
+// // Searches for cats in the database
+// Cat.find({}, function (err, cats) {
+//     if (err) {
+//         console.log("SOMETHING WENT WRONG!")
+//         console.log(err);
+//     } else {
+//         console.log("WE FOUND (A) CAT(S) IN THE DB");
+//         console.log(cats);
+//     }
+// })
+
+
+// Cat.create() is a single method that combines creating a cat + george.save()
+Cat.create({
+    name: "Snow White",
+    age: 15,
+    temperament: "Bland"
+}, function(err, cat){
+    if(err){
         console.log(err);
     } else {
-        console.log("WE FOUND (A) CAT(S) IN THE DB");
-        console.log(cats);
+        console.log(cat);
     }
-})
+});
