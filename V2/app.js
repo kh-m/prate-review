@@ -42,8 +42,8 @@ app.get("/campgrounds", function(req, res){
         } else {
             res.render("campgrounds", {camps: allCamps})
         }
-    })
-})
+    });
+});
 
 app.post("/campgrounds", function(req, res){
     var name = req.body.name;
@@ -51,11 +51,11 @@ app.post("/campgrounds", function(req, res){
     var newCampGround = {name: name, img: img};
     campGrounds.push(newCampGround);
     res.redirect("/campgrounds");
-})
+});
 
 app.get("/campgrounds/new", function(req, res){
     res.render("new");
-})
+});
 
 app.listen(8000, function(){
     console.log("Camp Server");
