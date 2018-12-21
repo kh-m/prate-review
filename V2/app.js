@@ -51,12 +51,13 @@ app.get("/campgrounds", function(req, res){
 app.post("/campgrounds", function(req, res){
     var name = req.body.name;
     var img = req.body.img;
-    var newCampGround = {name: name, img: img};
+    var description = req.body.description;
+    var newCampGround = {name: name, img: img, description: description};
     Camp.create(newCampGround, function(err, camp){
         if(err){
             console.log(err);
         } else {
-            res.redirect("/index");
+            res.redirect("/campgrounds");
         }
     })
 });

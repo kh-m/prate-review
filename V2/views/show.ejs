@@ -1,3 +1,9 @@
-<h1>The show template</h1>
+<% include partials/headers %>
 
-<p><%= camp.name %></p>
+<h1><%= camp.name %></h1>
+
+<img src="<%= camp.img %>" alt="">
+
+<p><%= camp.description %></p>
+
+<% include partials/footers %>
