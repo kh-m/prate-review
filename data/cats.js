@@ -36,3 +36,15 @@ var Cat = mongoose.model("Cat", catSchema);
 // });
 
 // retrieve cats from database
+
+
+// Searches for cats in the database
+Cat.find({}, function (err, cats) {
+    if (err) {
+        console.log("SOMETHING WENT WRONG!")
+        console.log(err);
+    } else {
+        console.log("WE FOUND (A) CAT(S) IN THE DB");
+        console.log(cats);
+    }
+})
