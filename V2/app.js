@@ -5,13 +5,30 @@ var express    = require("express"),
 
 app.use(bodyParser.urlencoded({extended: true}))
 app.set("view engine", "ejs");
-mongoose.connect("mongodb://localhost:camp", { useNewUrlParser: true });
+mongoose.connect("mongodb://localhost:27017/camp", { useNewUrlParser: true });
 
-var campGrounds = [
-    {name: "Kamloops", img: "https://s3.amazonaws.com/imagescloud/images/medias/camping/camping-tente.jpg"},
-    {name: "Whistler", img: "http://iluvesports.com/wp-content/uploads/2014/08/camping-outdoors.jpg"},
-    {name: "Squamish", img: "http://s3.amazonaws.com/digitaltrends-uploads-prod/2017/06/camping-tent-1500x1000.png"}
-]
+// Schema setup
+var campSchema = new mongoose.Schema({
+    name: String,
+    img: String
+});
+
+// Makes a model using above schema with methods in it like Campground.find() etc.
+var Camp = mongoose.model("Camp", campSchema);
+
+Camp.create(
+    {
+        name: "Whistler",
+        img: "http://iluvesports.com/wp-content/uploads/2014/08/camping-outdoors.jpg"
+    
+    }, function(err, camp){
+        if(err){
+            console.log(err);
+        } else {
+            console.log("New camp added!");
+            console.log(camp);
+        }
+    });
 
 app.get("/", function(req, res){
     res.render("landing");
