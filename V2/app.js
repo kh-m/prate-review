@@ -49,8 +49,13 @@ app.post("/campgrounds", function(req, res){
     var name = req.body.name;
     var img = req.body.img;
     var newCampGround = {name: name, img: img};
-    campGrounds.push(newCampGround);
-    res.redirect("/campgrounds");
+    Camp.create(newCampGround, function(err, camp){
+        if(err){
+            console.log(err);
+        } else {
+            res.redirect("/campgrounds");
+        }
+    })
 });
 
 app.get("/campgrounds/new", function(req, res){
