@@ -10,16 +10,19 @@ mongoose.connect("mongodb://localhost:27017/camp", { useNewUrlParser: true });
 // Schema setup
 var campSchema = new mongoose.Schema({
     name: String,
-    img: String
+    img: String,
+    description: String
 });
 
 // Makes a model using above schema with methods in it like Campground.find() etc.
+// ... or 'complies schema into a model'
 var Camp = mongoose.model("Camp", campSchema);
 
 // Camp.create(
 //     {
-//         name: "Whistler",
-//         img: "http://iluvesports.com/wp-content/uploads/2014/08/camping-outdoors.jpg"
+//         name: "Everest",
+//         img: "http://res.cloudinary.com/holiday-india/image/upload/Camping-Everest-Base-Camp_1439798320.jpg",
+//         description: "The ultimate."
     
 //     }, function(err, camp){
 //         if(err){
@@ -40,7 +43,7 @@ app.get("/campgrounds", function(req, res){
         if(err){
             console.log(err);
         } else {
-            res.render("campgrounds", {camps: allCamps})
+            res.render("index", {camps: allCamps})
         }
     });
 });
@@ -53,7 +56,7 @@ app.post("/campgrounds", function(req, res){
         if(err){
             console.log(err);
         } else {
-            res.redirect("/campgrounds");
+            res.redirect("/index");
         }
     })
 });
@@ -61,6 +64,18 @@ app.post("/campgrounds", function(req, res){
 app.get("/campgrounds/new", function(req, res){
     res.render("new");
 });
+
+// SHOW more info about specified camp
+app.get("/campgrounds/:id", function(req, res){
+    // finds camp with provided ID
+    Camp.findById(req.params.id, function(err, foundCamp){
+        if(err){
+            console.log(err);
+        } else {
+            res.render("show", {camp: foundCamp});
+        }
+    });
+})
 
 app.listen(8000, function(){
     console.log("Camp Server");
