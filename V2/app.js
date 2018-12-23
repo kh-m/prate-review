@@ -1,22 +1,17 @@
 var express    = require("express"),
     app        = express(),
     bodyParser = require("body-parser"),
-    mongoose   = require("mongoose");
+    mongoose   = require("mongoose"),
+    Camp       = require("./models/camp"),
+    User       = require("./models/user"),
+    Comment    = require("./models/comment"),
+    seedDB     = require("./seeds");
+    
 
+seedDB();
 app.use(bodyParser.urlencoded({extended: true}))
 app.set("view engine", "ejs");
 mongoose.connect("mongodb://localhost:27017/camp", { useNewUrlParser: true });
-
-// Schema setup
-var campSchema = new mongoose.Schema({
-    name: String,
-    img: String,
-    description: String
-});
-
-// Makes a model using above schema with methods in it like Campground.find() etc.
-// ... or 'complies schema into a model'
-var Camp = mongoose.model("Camp", campSchema);
 
 // Camp.create(
 //     {
