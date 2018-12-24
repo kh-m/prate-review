@@ -38,7 +38,7 @@ app.get("/campgrounds", function(req, res){
         if(err){
             console.log(err);
         } else {
-            res.render("index", {camps: allCamps})
+            res.render("camps/index", {camps: allCamps})
         }
     });
 });
@@ -58,7 +58,7 @@ app.post("/campgrounds", function(req, res){
 });
 
 app.get("/campgrounds/new", function(req, res){
-    res.render("new");
+    res.render("camps/new");
 });
 
 // SHOW more info about specified camp
@@ -70,10 +70,25 @@ app.get("/campgrounds/:id", function(req, res){
             console.log(err);
         } else {
             console.log(foundCamp);
-            res.render("show", {camp: foundCamp});
+            res.render("camps/show", {camp: foundCamp});
         }
     });
 })
+
+// =====================================
+//          COMMENTS ROUTES
+// =====================================
+
+app.get("/campgrounds/:id/comments/new", function(req, res) {
+    // find camp by id
+    Camp.findById(req.params.id, function(err, camp) {
+        if(err) {
+            console.log(err);
+        } else {
+            res.render("comments/new", {camp: camp});
+        }
+    })
+});
 
 app.listen(8000, function(){
     console.log("Camp Server");
