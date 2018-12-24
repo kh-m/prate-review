@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 var Camp = require("./models/camp");
+var Comment = require("./models/comment");
 
 var data = [
     {
@@ -29,12 +30,28 @@ function seedDB() {
             // loop through each camp in var data
             data.forEach(function (seed) {
                 // then create a camp from each one of the data
-                Camp.create(seed, function (err, data) {
+                Camp.create(seed, function (err, camp) {
                     if (err) {
                         console.log(err);
                     } else {
                         console.log("added a camp");
-                        //add few comments
+                        // creates a comment
+                        Comment.create(
+                            {
+                                text: "This place is great, but I wish there was Internet",
+                                author: "Sam"
+                            }, function (err, comment) {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    // pushes the comment into comment field in array of camps
+                                    camp.comments.push(comment);
+                                    // saves the camp, with the new added comment
+                                    camp.save();
+                                    console.log("created new comment.");
+                                }
+                            }
+                        );
                     }
                 });
             });
