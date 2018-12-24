@@ -8,10 +8,10 @@ var express    = require("express"),
     seedDB     = require("./seeds");
     
 
-seedDB();
 app.use(bodyParser.urlencoded({extended: true}))
 app.set("view engine", "ejs");
 mongoose.connect("mongodb://localhost:27017/camp", { useNewUrlParser: true });
+seedDB();
 
 // Camp.create(
 //     {
@@ -64,10 +64,12 @@ app.get("/campgrounds/new", function(req, res){
 // SHOW more info about specified camp
 app.get("/campgrounds/:id", function(req, res){
     // finds camp with provided ID
-    Camp.findById(req.params.id, function(err, foundCamp){
+    // populate("comments") will fill the comment fields (vs. only display the id of their arrays)
+    Camp.findById(req.params.id).populate("comments").exec(function(err, foundCamp){
         if(err){
             console.log(err);
         } else {
+            console.log(foundCamp);
             res.render("show", {camp: foundCamp});
         }
     });
