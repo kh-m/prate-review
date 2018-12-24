@@ -5,17 +5,17 @@ var Comment = require("./models/comment");
 var data = [
     {
         name: "Cloud's Rest",
-        image: "http://s3.amazonaws.com/virginiablog/wp-content/uploads/2016/03/16115458/North-Bend-Park-Campground.jpg",
+        img: "http://s3.amazonaws.com/virginiablog/wp-content/uploads/2016/03/16115458/North-Bend-Park-Campground.jpg",
         description: "yeah yeah yeah"
     },
     {
         name: "2",
-        image: "http://s3.amazonaws.com/virginiablog/wp-content/uploads/2016/03/16115458/Mount-Rogers-and-Whitetop-Mountain.jpg",
+        img: "http://s3.amazonaws.com/virginiablog/wp-content/uploads/2016/03/16115458/Mount-Rogers-and-Whitetop-Mountain.jpg",
         description: "yeah yeah yeah"
     },
     {
         name: "Three",
-        image: "https://blazepress.com/.image/t_share/MTI4OTg4NzQwODc3MDM2MTYz/amazing-camping-tent-view-25.jpg",
+        img: "https://blazepress.com/.image/t_share/MTI4OTg4NzQwODc3MDM2MTYz/amazing-camping-tent-view-25.jpg",
         description: "yeah yeah yeah"
     }
 ]
