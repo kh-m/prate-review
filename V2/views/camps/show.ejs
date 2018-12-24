@@ -1,10 +1,35 @@
 <% include ../partials/headers %>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <p class="lead">My Restaurants</p>
+            <div class="list-group">
+                <li class="list-group-item active">Info 1</li>
+                <li class="list-group-item">Info 2</li>
+                <li class="list-group-item">Info 3</li>
+            </div>
+            <!-- map -->
 
-<h1><%= camp.name %></h1>
+        </div>
+        <div class="col-md-9">
+            <div class="thumbnail">
+                <img class="img-responsive" src="<%= camp.img %>" alt="">
+                <div class="caption-full">
+                    <h4 class="pull-right">$PRICE</h4>
+                    <h4><a href=""><%= camp.name %></a></h4>
+                    <p><%= camp.description %></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<img src="<%= camp.img %>" alt="">
+</div>
 
-<p><%= camp.description %></p>
+
+
+
+
+
 
 <p>
     <a class="btn btn-success" href="/campgrounds/<%= camp._id %>/comments/new">Add comments</a>

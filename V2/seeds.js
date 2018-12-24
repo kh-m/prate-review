@@ -6,17 +6,18 @@ var data = [
     {
         name: "Cloud's Rest",
         img: "http://s3.amazonaws.com/virginiablog/wp-content/uploads/2016/03/16115458/North-Bend-Park-Campground.jpg",
-        description: "yeah yeah yeah"
+        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus sit maxime obcaecati facilis inventore repudiandae voluptas suscipit, repellendus corporis, dolorum quis adipisci eligendi nihil laboriosam! Cum iusto deserunt suscipit recusandae sed impedit eum, placeat accusantium commodi expedita non error tempora incidunt odit atque harum unde illum distinctio aliquam provident quia!"
+        
     },
     {
         name: "2",
         img: "http://s3.amazonaws.com/virginiablog/wp-content/uploads/2016/03/16115458/Mount-Rogers-and-Whitetop-Mountain.jpg",
-        description: "yeah yeah yeah"
+        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus sit maxime obcaecati facilis inventore repudiandae voluptas suscipit, repellendus corporis, dolorum quis adipisci eligendi nihil laboriosam! Cum iusto deserunt suscipit recusandae sed impedit eum, placeat accusantium commodi expedita non error tempora incidunt odit atque harum unde illum distinctio aliquam provident quia!"
     },
     {
         name: "Three",
         img: "https://blazepress.com/.image/t_share/MTI4OTg4NzQwODc3MDM2MTYz/amazing-camping-tent-view-25.jpg",
-        description: "yeah yeah yeah"
+        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus sit maxime obcaecati facilis inventore repudiandae voluptas suscipit, repellendus corporis, dolorum quis adipisci eligendi nihil laboriosam! Cum iusto deserunt suscipit recusandae sed impedit eum, placeat accusantium commodi expedita non error tempora incidunt odit atque harum unde illum distinctio aliquam provident quia!"
     }
 ]
 
