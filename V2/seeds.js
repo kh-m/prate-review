@@ -5,17 +5,17 @@ var Comment = require("./models/comment");
 var data = [
     {
         name: "Cloud's Rest",
-        image: "https://proxy.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.steveandsandyhikes.com%2Fwp-content%2Fuploads%2F2016%2F03%2FIMG_5002.jpg&f=1",
+        image: "http://s3.amazonaws.com/virginiablog/wp-content/uploads/2016/03/16115458/North-Bend-Park-Campground.jpg",
         description: "yeah yeah yeah"
     },
     {
-        name: "Cloud's Rest",
-        image: "http://cascadeclimbers.com/plab/data/513/clouds07.JPG",
+        name: "2",
+        image: "http://s3.amazonaws.com/virginiablog/wp-content/uploads/2016/03/16115458/Mount-Rogers-and-Whitetop-Mountain.jpg",
         description: "yeah yeah yeah"
     },
     {
-        name: "Cloud's Rest",
-        image: "https://www.backpacker.com/.image/t_share/MTQ0OTE0MDA0NzQ4ODA1ODYx/bp0615nps100_ordelheide_cloudsrest_750x400.jpg",
+        name: "Three",
+        image: "https://blazepress.com/.image/t_share/MTI4OTg4NzQwODc3MDM2MTYz/amazing-camping-tent-view-25.jpg",
         description: "yeah yeah yeah"
     }
 ]
