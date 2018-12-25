@@ -32,6 +32,12 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// passes currentUser (req.user) to all templates
+app.use(function(req, res, next) {
+    res.locals.currentUser = req.user;
+    next();
+});
+
 // Camp.create(
 //     {
 //         name: "Everest",
@@ -58,6 +64,7 @@ app.get("/", function(req, res){
 })
 
 // GET:/camps
+// Displays all campgrounds
 app.get("/camps", function(req, res){
     Camp.find({}, function(err, allCamps){
         if(err){
@@ -194,7 +201,7 @@ app.get("/logout", function(req, res) {
 
 function isLoggedIn(req, res, next) {
     if(req.isAuthenticated()) {
-        return next;
+        return next();
     }
     res.redirect("/login");
 };

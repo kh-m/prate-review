@@ -16,9 +16,15 @@
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/login">login</a></li>
-                    <li><a href="/register">sign up</a></li>
-                    <li><a href="/logout">logout</a></li>
+                    <!-- check if user is logged in to know what to display -->
+                    <% if(!currentUser) { %>
+                        <li><a href="/login">login</a></li>
+                        <li><a href="/register">sign up</a></li>
+                    <% } else { %>
+                        <li><a href="#">Hello, <%= currentUser.username %></a></li>
+                        <li><a href="/logout">logout</a></li>
+                        
+                    <% } %>
                 </ul>
             </div>
         </div>
