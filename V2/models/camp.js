@@ -15,7 +15,7 @@ var campSchema = new mongoose.Schema({
     ]
 });
 
-// Makes a model using above schema with methods in it like Campground.find() etc.
+// Makes a model using above schema with methods in it like Camps.find() etc.
 // ... or 'complies schema into a model'
 // and exports it
 module.exports = mongoose.model("Camp", campSchema);

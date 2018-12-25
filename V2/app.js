@@ -48,11 +48,17 @@ passport.deserializeUser(User.deserializeUser());
 //     }
 // );
 
+// =====================================
+//              MAIN ROUTES
+// =====================================
+
+// GET:/
 app.get("/", function(req, res){
     res.render("landing");
 })
 
-app.get("/campgrounds", function(req, res){
+// GET:/camps
+app.get("/camps", function(req, res){
     Camp.find({}, function(err, allCamps){
         if(err){
             console.log(err);
@@ -62,26 +68,29 @@ app.get("/campgrounds", function(req, res){
     });
 });
 
-app.post("/campgrounds", function(req, res){
+// POST:/camps
+app.post("/camps", function(req, res){
     var name = req.body.name;
     var img = req.body.img;
     var description = req.body.description;
-    var newCampGround = {name: name, img: img, description: description};
-    Camp.create(newCampGround, function(err, camp){
+    var newCamp = {name: name, img: img, description: description};
+    Camp.create(newCamp, function(err, camp){
         if(err){
             console.log(err);
         } else {
-            res.redirect("/campgrounds");
+            res.redirect("/camps");
         }
     })
 });
 
-app.get("/campgrounds/new", function(req, res){
+// GET:/camps/new
+app.get("/camps/new", function(req, res){
     res.render("camps/new");
 });
 
+// GET:/camps/:id
 // SHOW more info about specified camp
-app.get("/campgrounds/:id", function(req, res){
+app.get("/camps/:id", function(req, res){
     // finds camp with provided ID
     // populate("comments") will fill the comment fields (vs. only display the id of their arrays)
     Camp.findById(req.params.id).populate("comments").exec(function(err, foundCamp){
@@ -98,7 +107,11 @@ app.get("/campgrounds/:id", function(req, res){
 //          COMMENTS ROUTES
 // =====================================
 
-app.get("/campgrounds/:id/comments/new", function(req, res) {
+// GET:/camps/:id/comments/new
+// form to add a new comment
+// isLoggedIn middleware NOT WORKING WHEN USER LOGGED IN!!!
+app.get("/camps/:id/comments/new", isLoggedIn, function(req, res) {
+    console.log("test1");
     // find camp by id
     Camp.findById(req.params.id, function(err, camp) {
         if(err) {
@@ -106,14 +119,15 @@ app.get("/campgrounds/:id/comments/new", function(req, res) {
         } else {
             res.render("comments/new", {camp: camp});
         }
-    })
+    });
 });
 
-app.post("/campgrounds/:id/comments", function (req, res) {
+// POST:/camps/:id/comments
+app.post("/camps/:id/comments", isLoggedIn, function (req, res) {
     Camp.findById(req.params.id, function(err, camp) {
         if(err) {
             console.log(err);
-            res.redirect("/campgrounds");
+            res.redirect("/camps");
         } else {
             Comment.create(req.body.comment, function (err, comment) {
                 if(err) {
@@ -121,7 +135,7 @@ app.post("/campgrounds/:id/comments", function (req, res) {
                 } else {
                     camp.comments.push(comment);
                     camp.save();
-                    res.redirect("/campgrounds/" + camp._id);
+                    res.redirect("/camps/" + camp._id);
                 }
             });
         }
@@ -150,7 +164,7 @@ app.post("/register", function(req, res) {
         }
         // telling passport to check/authenticate using 'local' strategy (vs. Google or FB etc.)
         passport.authenticate("local")(req, res, function() {
-            res.redirect("/campgrounds");
+            res.redirect("/camps");
         });
     });
 });
@@ -166,12 +180,24 @@ app.get("/login", function(req, res) {
 // passport.authenticate() is middleware that checks if password is correct etc.
 app.post("/login", passport.authenticate("local",
     {
-        successRedirect: "/campgrounds",
+        successRedirect: "/camps",
         failureRedirect: "/login"
     }), function(req, res) {
     
 });
 
+// GET:/logout
+app.get("/logout", function(req, res) {
+    req.logout();
+    res.redirect("/camps");
+});
+
+function isLoggedIn(req, res, next) {
+    if(req.isAuthenticated()) {
+        return next;
+    }
+    res.redirect("/login");
+};
 
 app.listen(8000, function(){
     console.log("Camp Server");
