@@ -9,4 +9,4 @@ var userSchema = new mongoose.Schema({
 // this will add methods from passport-local-mongoose to userSchema
 userSchema.plugin(passportLocalMongoose);
 
-module.export = mongoose.model("User", userSchema);
+module.exports = mongoose.model("User", userSchema);

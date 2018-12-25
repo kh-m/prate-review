@@ -19,6 +19,18 @@ mongoose.connect("mongodb://localhost:27017/camp", { useNewUrlParser: true });
 app.use(express.static(__dirname + "/public"))
 seedDB();
 
+// PASSPORT CONFIGURATION
+app.use(require("express-session")({
+    secret: "Shikoba is the best",
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+// this method comes from localPassportMongoose (next 3 lines):
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 // Camp.create(
 //     {
