@@ -128,6 +128,51 @@ app.post("/campgrounds/:id/comments", function (req, res) {
     });
 });
 
+// =====================================
+//             AUTH ROUTES
+// =====================================
+
+// GET:/register
+// shows register form
+app.get("/register", function(req, res) {
+    res.render("register");
+});
+
+// POST:/register
+// handles sign up login
+app.post("/register", function(req, res) {
+    // .register method provided by passport-local-mongoose
+    var newUser = new User({username: req.body.username});
+    User.register(newUser, req.body.password, function(err, user) {
+        if(err) {
+            console.log(err);
+            return res.redirect("register");
+        }
+        // telling passport to check/authenticate using 'local' strategy (vs. Google or FB etc.)
+        passport.authenticate("local")(req, res, function() {
+            res.redirect("/campgrounds");
+        });
+    });
+});
+
+// GET:/login
+// shows login for
+app.get("/login", function(req, res) {
+    res.render("login");
+})
+
+// POST:/login
+// handles login
+// passport.authenticate() is middleware that checks if password is correct etc.
+app.post("/login", passport.authenticate("local",
+    {
+        successRedirect: "/campgrounds",
+        failureRedirect: "/login"
+    }), function(req, res) {
+    
+});
+
+
 app.listen(8000, function(){
     console.log("Camp Server");
 });
