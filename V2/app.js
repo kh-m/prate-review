@@ -1,8 +1,11 @@
-var express    = require("express"),
-    app        = express(),
-    bodyParser = require("body-parser"),
-    mongoose   = require("mongoose"),
-    Camp       = require("./models/camp"),
+var express       = require("express"),
+    app           = express(),
+    bodyParser    = require("body-parser"),
+    mongoose      = require("mongoose"),
+    passport      = require("passport"),
+    LocalStrategy = require("passport-local");
+
+var Camp       = require("./models/camp"),
     User       = require("./models/user"),
     Comment    = require("./models/comment"),
     seedDB     = require("./seeds");
@@ -15,6 +18,7 @@ mongoose.connect("mongodb://localhost:27017/camp", { useNewUrlParser: true });
 // redundant saftey measure in case directory changes
 app.use(express.static(__dirname + "/public"))
 seedDB();
+
 
 // Camp.create(
 //     {

@@ -23,7 +23,7 @@ var data = [
 
 function seedDB() {
     // removes all camps
-    Camp.remove({}, function (err) {
+    Camp.deleteMany({}, function (err) {
         if (err) {
             console.log(err);
         } else {
