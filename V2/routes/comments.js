@@ -7,7 +7,7 @@ var Comment   = require("../models/comment");
 
 // GET:/camps/:id/comments/new
 // form to add a new comment
-// isLoggedIn middleware NOT WORKING WHEN USER LOGGED IN!!!
+// isLoggedIn middleware
 router.get("/new", isLoggedIn, function(req, res) {
     // find camp by id
     Camp.findById(req.params.id, function(err, camp) {
@@ -30,6 +30,12 @@ router.post("/", isLoggedIn, function (req, res) {
                 if(err) {
                     console.log(err);
                 } else {
+                    // add username & id to comment
+                    comment.author.id = req.user._id;
+                    comment.author.username = req.user.username;
+                    console.log(req.user.username);
+                    // save comment
+                    comment.save();
                     camp.comments.push(comment);
                     camp.save();
                     res.redirect("/camps/" + camp._id);

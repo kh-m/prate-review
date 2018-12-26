@@ -20,7 +20,8 @@ mongoose.connect("mongodb://localhost:27017/camp", { useNewUrlParser: true });
 // __dirname refers to the directory the current file (app.js) lives in;
 // redundant saftey measure in case directory changes
 app.use(express.static(__dirname + "/public"))
-seedDB();
+// // seeds the db with the data (camps, users, comments etc)
+// seedDB();
 
 // --PASSPORT CONFIGURATION--
 app.use(require("express-session")({
