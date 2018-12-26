@@ -10,6 +10,9 @@ var Camp       = require("./models/camp"),
     Comment    = require("./models/comment"),
     seedDB     = require("./seeds");
     
+var indexRoutes     = require("./routes/index"),
+    campRoutes      = require("./routes/camps"),
+    commentsRoutes  = require("./routes/comments");
 
 app.use(bodyParser.urlencoded({extended: true}))
 app.set("view engine", "ejs");
@@ -19,7 +22,7 @@ mongoose.connect("mongodb://localhost:27017/camp", { useNewUrlParser: true });
 app.use(express.static(__dirname + "/public"))
 seedDB();
 
-// PASSPORT CONFIGURATION
+// --PASSPORT CONFIGURATION--
 app.use(require("express-session")({
     secret: "Shikoba is the best",
     resave: false,
@@ -38,6 +41,11 @@ app.use(function(req, res, next) {
     next();
 });
 
+// tells app to use the routes declared
+app.use(indexRoutes);
+app.use("/camps", campRoutes);
+app.use("/camps/:id/comments", commentsRoutes);
+
 // Camp.create(
 //     {
 //         name: "Everest",
@@ -54,157 +62,6 @@ app.use(function(req, res, next) {
 //     }
 // );
 
-// =====================================
-//              MAIN ROUTES
-// =====================================
-
-// GET:/
-app.get("/", function(req, res){
-    res.render("landing");
-})
-
-// GET:/camps
-// Displays all campgrounds
-app.get("/camps", function(req, res){
-    Camp.find({}, function(err, allCamps){
-        if(err){
-            console.log(err);
-        } else {
-            res.render("camps/index", {camps: allCamps})
-        }
-    });
-});
-
-// POST:/camps
-app.post("/camps", function(req, res){
-    var name = req.body.name;
-    var img = req.body.img;
-    var description = req.body.description;
-    var newCamp = {name: name, img: img, description: description};
-    Camp.create(newCamp, function(err, camp){
-        if(err){
-            console.log(err);
-        } else {
-            res.redirect("/camps");
-        }
-    })
-});
-
-// GET:/camps/new
-app.get("/camps/new", function(req, res){
-    res.render("camps/new");
-});
-
-// GET:/camps/:id
-// SHOW more info about specified camp
-app.get("/camps/:id", function(req, res){
-    // finds camp with provided ID
-    // populate("comments") will fill the comment fields (vs. only display the id of their arrays)
-    Camp.findById(req.params.id).populate("comments").exec(function(err, foundCamp){
-        if(err){
-            console.log(err);
-        } else {
-            console.log(foundCamp);
-            res.render("camps/show", {camp: foundCamp});
-        }
-    });
-})
-
-// =====================================
-//          COMMENTS ROUTES
-// =====================================
-
-// GET:/camps/:id/comments/new
-// form to add a new comment
-// isLoggedIn middleware NOT WORKING WHEN USER LOGGED IN!!!
-app.get("/camps/:id/comments/new", isLoggedIn, function(req, res) {
-    console.log("test1");
-    // find camp by id
-    Camp.findById(req.params.id, function(err, camp) {
-        if(err) {
-            console.log(err);
-        } else {
-            res.render("comments/new", {camp: camp});
-        }
-    });
-});
-
-// POST:/camps/:id/comments
-app.post("/camps/:id/comments", isLoggedIn, function (req, res) {
-    Camp.findById(req.params.id, function(err, camp) {
-        if(err) {
-            console.log(err);
-            res.redirect("/camps");
-        } else {
-            Comment.create(req.body.comment, function (err, comment) {
-                if(err) {
-                    console.log(err);
-                } else {
-                    camp.comments.push(comment);
-                    camp.save();
-                    res.redirect("/camps/" + camp._id);
-                }
-            });
-        }
-    });
-});
-
-// =====================================
-//             AUTH ROUTES
-// =====================================
-
-// GET:/register
-// shows register form
-app.get("/register", function(req, res) {
-    res.render("register");
-});
-
-// POST:/register
-// handles sign up login
-app.post("/register", function(req, res) {
-    // .register method provided by passport-local-mongoose
-    var newUser = new User({username: req.body.username});
-    User.register(newUser, req.body.password, function(err, user) {
-        if(err) {
-            console.log(err);
-            return res.redirect("register");
-        }
-        // telling passport to check/authenticate using 'local' strategy (vs. Google or FB etc.)
-        passport.authenticate("local")(req, res, function() {
-            res.redirect("/camps");
-        });
-    });
-});
-
-// GET:/login
-// shows login for
-app.get("/login", function(req, res) {
-    res.render("login");
-})
-
-// POST:/login
-// handles login
-// passport.authenticate() is middleware that checks if password is correct etc.
-app.post("/login", passport.authenticate("local",
-    {
-        successRedirect: "/camps",
-        failureRedirect: "/login"
-    }), function(req, res) {
-    
-});
-
-// GET:/logout
-app.get("/logout", function(req, res) {
-    req.logout();
-    res.redirect("/camps");
-});
-
-function isLoggedIn(req, res, next) {
-    if(req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect("/login");
-};
 
 app.listen(8000, function(){
     console.log("Camp Server");
