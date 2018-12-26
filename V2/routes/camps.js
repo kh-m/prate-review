@@ -16,22 +16,28 @@ router.get("/", function(req, res){
 });
 
 // POST:/camps
-router.post("/", function(req, res){
+router.post("/", isLoggedIn, function(req, res){
     var name = req.body.name;
     var img = req.body.img;
     var description = req.body.description;
-    var newCamp = {name: name, img: img, description: description};
-    Camp.create(newCamp, function(err, camp){
+    var author = {
+        id: req.user._id,
+        username: req.user.username
+    };
+    var newCamp = {name: name, img: img, description: description, author: author};
+    
+    Camp.create(newCamp, function(err, newCamp){
         if(err){
             console.log(err);
         } else {
+            console.log(newCamp);
             res.redirect("/camps");
         }
     })
 });
 
 // GET:/camps/new
-router.get("/new", function(req, res){
+router.get("/new", isLoggedIn, function(req, res){
     res.render("camps/new");
 });
 
@@ -49,5 +55,14 @@ router.get("/:id", function(req, res){
         }
     });
 });
+
+
+// middleware to verify that user is logged in
+function isLoggedIn(req, res, next) {
+    if(req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect("/login");
+};
 
 module.exports = router;

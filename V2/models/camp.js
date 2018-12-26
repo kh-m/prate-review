@@ -5,6 +5,13 @@ var campSchema = new mongoose.Schema({
     name: String,
     img: String,
     description: String,
+    author: {
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        },
+        username: String,
+    },
     comments: [
         {
             // 'referencing' the data (vs. embedding it)
