@@ -68,7 +68,7 @@ router.get("/:id/edit", function(req, res) {
     });
 });
 
-// UPDATE CAMP ROUTE
+// PUT:/camp/:id
 /// submits updated camp to db
 router.put("/:id", function(req, res) {
     /// finds and update the correct camp in one method (vs. doing findByID() then updating)
@@ -78,6 +78,18 @@ router.put("/:id", function(req, res) {
         } else {
             /// only redirecting at this point since the method already updated the Camp values
             res.redirect("/camps/" + req.params.id);
+        }
+    });
+});
+
+// DELETE:/camp/:id
+/// deletes given camp
+router.delete("/:id", function(req, res) {
+    Camp.findByIdAndRemove(req.params.id, function(err) {
+        if(err) {
+            res.redirect("/camps");
+        } else {
+            res.redirect("/camps");
         }
     });
 });
