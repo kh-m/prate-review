@@ -1,9 +1,10 @@
-var express       = require("express"),
-    app           = express(),
-    bodyParser    = require("body-parser"),
-    mongoose      = require("mongoose"),
-    passport      = require("passport"),
-    LocalStrategy = require("passport-local");
+var express        = require("express"),
+    app            = express(),
+    bodyParser     = require("body-parser"),
+    mongoose       = require("mongoose"),
+    passport       = require("passport"),
+    LocalStrategy  = require("passport-local"),
+    methodOverride = require("method-override");
 
 var Camp       = require("./models/camp"),
     User       = require("./models/user"),
@@ -20,6 +21,8 @@ mongoose.connect("mongodb://localhost:27017/camp", { useNewUrlParser: true });
 // __dirname refers to the directory the current file (app.js) lives in;
 // redundant saftey measure in case directory changes
 app.use(express.static(__dirname + "/public"))
+// to connect method-override to app (express) & listen at _method
+app.use(methodOverride("_method"));
 // // seeds the db with the data (camps, users, comments etc)
 // seedDB();
 

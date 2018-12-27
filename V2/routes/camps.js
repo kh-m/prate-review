@@ -4,7 +4,7 @@ var express = require("express"),
 var Camp = require("../models/camp")
 
 // GET:/camps
-// Displays all campgrounds
+/// displays all campgrounds
 router.get("/", function(req, res){
     Camp.find({}, function(err, allCamps){
         if(err){
@@ -42,7 +42,7 @@ router.get("/new", isLoggedIn, function(req, res){
 });
 
 // GET:/camps/:id
-// SHOW more info about specified camp
+/// SHOW more info about specified camp
 router.get("/:id", function(req, res){
     // finds camp with provided ID
     // populate("comments") will fill the comment fields (vs. only display the id of their arrays)
@@ -52,6 +52,32 @@ router.get("/:id", function(req, res){
         } else {
             console.log(foundCamp);
             res.render("camps/show", {camp: foundCamp});
+        }
+    });
+});
+
+// GET:/camps/:id/edit
+/// edits given camp
+router.get("/:id/edit", function(req, res) {
+    Camp.findById(req.params.id, function(err, foundCamp) {
+        if(err) {
+            res.redirect("/camps");
+        } else {
+            res.render("camps/edit", {camp: foundCamp});
+        }
+    });
+});
+
+// UPDATE CAMP ROUTE
+/// submits updated camp to db
+router.put("/:id", function(req, res) {
+    /// finds and update the correct camp in one method (vs. doing findByID() then updating)
+    Camp.findByIdAndUpdate(req.params.id, req.body.camp, function(err, updatedCamp) {
+        if(err) {
+            res.redirect("/:id/edit");
+        } else {
+            /// only redirecting at this point since the method already updated the Camp values
+            res.redirect("/camps/" + req.params.id);
         }
     });
 });
