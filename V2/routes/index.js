@@ -37,7 +37,7 @@ router.post("/register", function(req, res) {
 // shows login for
 router.get("/login", function(req, res) {
     res.render("login");
-})
+});
 
 // POST:/login
 // handles login
@@ -53,6 +53,7 @@ router.post("/login", passport.authenticate("local",
 // GET:/logout
 router.get("/logout", function(req, res) {
     req.logout();
+    req.flash("success", "Logged out");
     res.redirect("/camps");
 });
 

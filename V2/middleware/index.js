@@ -8,6 +8,8 @@ middlewareObj.isLoggedIn = function (req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
+    // adding this line will not display anything; it will only give ability to display when it's passed to redirected page
+    req.flash("error", "You must be logged in");
     res.redirect("/login");
 };
 

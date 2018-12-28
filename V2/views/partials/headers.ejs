@@ -29,3 +29,17 @@
             </div>
         </div>
     </nav>
+
+    <!-- flash messages (e.g. 'you must be logged in', 'logged out') -->
+    <div class="container">
+        <% if(successMessage  && successMessage.length>0) { %>
+        <div class="alert alert-success" role="alert">
+            <%= successMessage %>
+        </div>
+        <% } %>
+        <% if(errorMessage && errorMessage.length>0) { %>
+        <div class="alert alert-danger" role="alert">
+            <%= errorMessage %>
+        </div>
+        <% } %>
+    </div>
