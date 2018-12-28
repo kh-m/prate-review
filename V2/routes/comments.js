@@ -48,7 +48,7 @@ router.post("/", isLoggedIn, function (req, res) {
 
 //  GET:/camps/:id/comments/:comment_id/edit
 /// displays form to edit comment
-router.get("/:comment_id/edit", function(req, res) {
+router.get("/:comment_id/edit", checkCommentOwnership, function(req, res) {
     Comment.findById(req.params.comment_id, function(err, foundComment) {
         if(err) {
             res.redirect("back");
@@ -61,7 +61,7 @@ router.get("/:comment_id/edit", function(req, res) {
 
 // PUT:/camps/:id/comments/:comment_id
 /// submits edited comment
-router.put("/:comment_id", function(req, res) {
+router.put("/:comment_id", checkCommentOwnership, function(req, res) {
     Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment) {
         if(err) {
             res.redirect("back");
@@ -73,7 +73,7 @@ router.put("/:comment_id", function(req, res) {
 
 // DELETE:/camps/:id/comments/:comment_id
 /// deletes given comment
-router.delete("/:comment_id", function(req, res) {
+router.delete("/:comment_id", checkCommentOwnership, function(req, res) {
     Comment.findByIdAndRemove(req.params.comment_id, function(err, deletedComment) {
         if(err) {
             res.redirect("back");
@@ -93,5 +93,26 @@ function isLoggedIn(req, res, next) {
     res.redirect("/login");
 };
 
+// middleware to check if user is owner of post
+function checkCommentOwnership(req, res, next) {
+    if (req.isAuthenticated()) {
+        Comment.findById(req.params.comment_id, function (err, foundComment) {
+            if (err) {
+                /// this sends the user back to the previous page they were on
+                res.redirect("back");
+            } else {
+                /// cannot use foundCamp.author.id === req.user._id because first one is actually a Mongoose object that gets printed out as a string
+                /// so .equals method provided by Mongoose turns it into a string
+                if(foundComment.author.id.equals(req.user._id)){
+                    next();
+                } else {
+                    res.redirect("back");
+                }
+            }
+        });
+    } else {
+        res.redirect("back");
+    }
+};
 
 module.exports = router;
