@@ -58,12 +58,12 @@ router.get("/:id", function(req, res){
 
 // GET:/camps/:id/edit
 /// edits given camp
-router.get("/:id/edit", function(req, res) {
-    Camp.findById(req.params.id, function(err, foundCamp) {
+router.get("/:id/edit", checkCampOwnership, function (req, res) {
+    Camp.findById(req.params.id, function (err, foundCamp) {
         if(err) {
-            res.redirect("/camps");
+            res.redirect("back");
         } else {
-            res.render("camps/edit", {camp: foundCamp});
+            res.render("camps/edit", { camp: foundCamp });
         }
     });
 });
@@ -102,5 +102,27 @@ function isLoggedIn(req, res, next) {
     }
     res.redirect("/login");
 };
+
+// middleware to check if user is owner of post
+function checkCampOwnership(req, res, next) {
+    if (req.isAuthenticated()) {
+        Camp.findById(req.params.id, function (err, foundCamp) {
+            if (err) {
+                /// this sends the user back to the previous page they were on
+                res.redirect("back");
+            } else {
+                /// cannot use foundCamp.author.id === req.user._id because first one is actually a Mongoose object that gets printed out as a string
+                /// so .equals method provided by Mongoose turns it into a string
+                if(foundCamp.author.id.equals(req.user._id)){
+                    next();
+                } else {
+                    res.redirect("back");
+                }
+            }
+        });
+    } else {
+        res.redirect("back");
+    }
+}
 
 module.exports = router;
