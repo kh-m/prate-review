@@ -26,10 +26,13 @@
                             <%= camp.author.username %>
                         </em>
                     </p>
-                    <a class="btn btn-warning" href="/camps/<%= camp._id %>/edit">edit</a>
-                    <form id="delete-form" action="/camps/<%= camp._id %>?_method=DELETE" method="POST">
-                        <button class="btn btn-danger">Delete</button>
-                    </form>
+                    <!-- hides edit & deletes buttons if post's owner is not logged in -->
+                    <% if(currentUser && camp.author.id.equals(currentUser._id)){ %>
+                        <a class="btn btn-warning" href="/camps/<%= camp._id %>/edit">edit</a>
+                        <form id="delete-form" action="/camps/<%= camp._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                    <% } %>
                 </div>
             </div>
             <div class="well">

@@ -70,7 +70,7 @@ router.get("/:id/edit", checkCampOwnership, function (req, res) {
 
 // PUT:/camp/:id
 /// submits updated camp to db
-router.put("/:id", function(req, res) {
+router.put("/:id", checkCampOwnership, function(req, res) {
     /// finds and update the correct camp in one method (vs. doing findByID() then updating)
     Camp.findByIdAndUpdate(req.params.id, req.body.camp, function(err, updatedCamp) {
         if(err) {
@@ -84,7 +84,7 @@ router.put("/:id", function(req, res) {
 
 // DELETE:/camp/:id
 /// deletes given camp
-router.delete("/:id", function(req, res) {
+router.delete("/:id", checkCampOwnership, function(req, res) {
     Camp.findByIdAndRemove(req.params.id, function(err) {
         if(err) {
             res.redirect("/camps");
