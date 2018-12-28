@@ -6,8 +6,8 @@ var Camp   = require("../models/camp");
 var Comment   = require("../models/comment");
 
 // GET:/camps/:id/comments/new
-// form to add a new comment
-// isLoggedIn middleware
+/// form to add a new comment
+/// isLoggedIn middleware
 router.get("/new", isLoggedIn, function(req, res) {
     // find camp by id
     Camp.findById(req.params.id, function(err, camp) {
@@ -20,6 +20,7 @@ router.get("/new", isLoggedIn, function(req, res) {
 });
 
 // POST:/camps/:id/comments
+/// submits the new comment to the db
 router.post("/", isLoggedIn, function (req, res) {
     Camp.findById(req.params.id, function(err, camp) {
         if(err) {
@@ -41,6 +42,31 @@ router.post("/", isLoggedIn, function (req, res) {
                     res.redirect("/camps/" + camp._id);
                 }
             });
+        }
+    });
+});
+
+//  GET:/camps/:id/comments/:comment_id/edit
+/// displays form to edit comment
+router.get("/:comment_id/edit", function(req, res) {
+    Comment.findById(req.params.comment_id, function(err, foundComment) {
+        if(err) {
+            res.redirect("back");
+            console.log("error!");
+        } else {
+            res.render("comments/edit", {camp_id: req.params.id, comment: foundComment});
+        }
+    });
+});
+
+// PUT:/camps/:id/comments
+/// submits edited comment
+router.put("/:comment_id", function(req, res) {
+    Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment) {
+        if(err) {
+            res.redirect("back");
+        } else {
+            res.redirect("/camps/" + req.params.id);
         }
     });
 });
