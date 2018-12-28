@@ -29,7 +29,7 @@
                     <!-- hides edit & deletes buttons if post's owner is not logged inhj  -->
                     <% if(currentUser && camp.author.id.equals(currentUser._id)){ %>
                         <a class="btn btn-warning" href="/camps/<%= camp._id %>/edit">edit</a>
-                        <form id="delete-form" action="/camps/<%= camp._id %>?_method=DELETE" method="POST">
+                        <form class="delete-form" action="/camps/<%= camp._id %>?_method=DELETE" method="POST">
                             <button class="btn btn-danger">Delete</button>
                         </form>
                     <% } %>
@@ -53,16 +53,17 @@
                         <a href="/camps/<%= camp._id %>/comments/<%= comment._id %>/edit" class="btn btn-xs btn-warning">
                             edit
                         </a>
+                        <form class="delete-form" action="/camps/<%= camp._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">
+                            <input class="btn btn-xs btn-danger" value="delete" type="submit">
+                        </form>
                     </div>
                 </div>
-
                 <% }) %>
             </div>
         </div>
     </div>
 
 </div>
-
 
 
 

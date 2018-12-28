@@ -59,7 +59,7 @@ router.get("/:comment_id/edit", function(req, res) {
     });
 });
 
-// PUT:/camps/:id/comments
+// PUT:/camps/:id/comments/:comment_id
 /// submits edited comment
 router.put("/:comment_id", function(req, res) {
     Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment) {
@@ -70,6 +70,20 @@ router.put("/:comment_id", function(req, res) {
         }
     });
 });
+
+// DELETE:/camps/:id/comments/:comment_id
+/// deletes given comment
+router.delete("/:comment_id", function(req, res) {
+    Comment.findByIdAndRemove(req.params.comment_id, function(err, deletedComment) {
+        if(err) {
+            res.redirect("back");
+        } else {
+            res.redirect("/camps/" + req.params.id);
+        }
+    });
+});
+
+
 
 // middleware to verify that user is logged in
 function isLoggedIn(req, res, next) {
