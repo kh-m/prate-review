@@ -2,13 +2,15 @@ var express = require("express"),
     // mergeParams allows us to pass parameters so that simplifing the routes (e.g. "/new" vs. "/comments/:id/new") works
     router  = express.Router({mergeParams: true});
 
-var Camp   = require("../models/camp");
-var Comment   = require("../models/comment");
+var Camp      = require("../models/camp"),
+    Comment   = require("../models/comment"),
+    // we don't have to write "../middleware/index.js" because when the file is named index.js, it is the automatic file express will use
+    middleware = require("../middleware");
 
 // GET:/camps/:id/comments/new
 /// form to add a new comment
 /// isLoggedIn middleware
-router.get("/new", isLoggedIn, function(req, res) {
+router.get("/new", middleware.isLoggedIn, function(req, res) {
     // find camp by id
     Camp.findById(req.params.id, function(err, camp) {
         if(err) {
@@ -21,7 +23,7 @@ router.get("/new", isLoggedIn, function(req, res) {
 
 // POST:/camps/:id/comments
 /// submits the new comment to the db
-router.post("/", isLoggedIn, function (req, res) {
+router.post("/", middleware.isLoggedIn, function (req, res) {
     Camp.findById(req.params.id, function(err, camp) {
         if(err) {
             console.log(err);
@@ -48,7 +50,7 @@ router.post("/", isLoggedIn, function (req, res) {
 
 //  GET:/camps/:id/comments/:comment_id/edit
 /// displays form to edit comment
-router.get("/:comment_id/edit", checkCommentOwnership, function(req, res) {
+router.get("/:comment_id/edit", middleware.checkCommentOwnership, function(req, res) {
     Comment.findById(req.params.comment_id, function(err, foundComment) {
         if(err) {
             res.redirect("back");
@@ -61,7 +63,7 @@ router.get("/:comment_id/edit", checkCommentOwnership, function(req, res) {
 
 // PUT:/camps/:id/comments/:comment_id
 /// submits edited comment
-router.put("/:comment_id", checkCommentOwnership, function(req, res) {
+router.put("/:comment_id", middleware.checkCommentOwnership, function(req, res) {
     Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment) {
         if(err) {
             res.redirect("back");
@@ -73,7 +75,7 @@ router.put("/:comment_id", checkCommentOwnership, function(req, res) {
 
 // DELETE:/camps/:id/comments/:comment_id
 /// deletes given comment
-router.delete("/:comment_id", checkCommentOwnership, function(req, res) {
+router.delete("/:comment_id", middleware.checkCommentOwnership, function(req, res) {
     Comment.findByIdAndRemove(req.params.comment_id, function(err, deletedComment) {
         if(err) {
             res.redirect("back");
@@ -83,36 +85,5 @@ router.delete("/:comment_id", checkCommentOwnership, function(req, res) {
     });
 });
 
-
-
-// middleware to verify that user is logged in
-function isLoggedIn(req, res, next) {
-    if(req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect("/login");
-};
-
-// middleware to check if user is owner of post
-function checkCommentOwnership(req, res, next) {
-    if (req.isAuthenticated()) {
-        Comment.findById(req.params.comment_id, function (err, foundComment) {
-            if (err) {
-                /// this sends the user back to the previous page they were on
-                res.redirect("back");
-            } else {
-                /// cannot use foundCamp.author.id === req.user._id because first one is actually a Mongoose object that gets printed out as a string
-                /// so .equals method provided by Mongoose turns it into a string
-                if(foundComment.author.id.equals(req.user._id)){
-                    next();
-                } else {
-                    res.redirect("back");
-                }
-            }
-        });
-    } else {
-        res.redirect("back");
-    }
-};
 
 module.exports = router;

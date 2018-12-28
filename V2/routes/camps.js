@@ -1,7 +1,9 @@
 var express = require("express"),
     router  = express.Router();
 
-var Camp = require("../models/camp")
+var Camp       = require("../models/camp"),
+    // we don't have to write "../middleware/index.js" because when the file is named index.js, it is the automatic file express will use
+    middleware = require("../middleware");
 
 // GET:/camps
 /// displays all campgrounds
@@ -16,7 +18,7 @@ router.get("/", function(req, res){
 });
 
 // POST:/camps
-router.post("/", isLoggedIn, function(req, res){
+router.post("/", middleware.isLoggedIn, function(req, res){
     var name = req.body.name;
     var img = req.body.img;
     var description = req.body.description;
@@ -37,12 +39,12 @@ router.post("/", isLoggedIn, function(req, res){
 });
 
 // GET:/camps/new
-router.get("/new", isLoggedIn, function(req, res){
+router.get("/new", middleware.isLoggedIn, function(req, res){
     res.render("camps/new");
 });
 
 // GET:/camps/:id
-/// SHOW more info about specified camp
+/// shows more info about specified camp
 router.get("/:id", function(req, res){
     // finds camp with provided ID
     // populate("comments") will fill the comment fields (vs. only display the id of their arrays)
@@ -58,7 +60,7 @@ router.get("/:id", function(req, res){
 
 // GET:/camps/:id/edit
 /// edits given camp
-router.get("/:id/edit", checkCampOwnership, function (req, res) {
+router.get("/:id/edit", middleware.checkCampOwnership, function (req, res) {
     Camp.findById(req.params.id, function (err, foundCamp) {
         if(err) {
             res.redirect("back");
@@ -70,7 +72,7 @@ router.get("/:id/edit", checkCampOwnership, function (req, res) {
 
 // PUT:/camp/:id
 /// submits updated camp to db
-router.put("/:id", checkCampOwnership, function(req, res) {
+router.put("/:id", middleware.checkCampOwnership, function(req, res) {
     /// finds and update the correct camp in one method (vs. doing findByID() then updating)
     Camp.findByIdAndUpdate(req.params.id, req.body.camp, function(err, updatedCamp) {
         if(err) {
@@ -84,7 +86,7 @@ router.put("/:id", checkCampOwnership, function(req, res) {
 
 // DELETE:/camp/:id
 /// deletes given camp
-router.delete("/:id", checkCampOwnership, function(req, res) {
+router.delete("/:id", middleware.checkCampOwnership, function(req, res) {
     Camp.findByIdAndRemove(req.params.id, function(err) {
         if(err) {
             res.redirect("/camps");
@@ -94,35 +96,5 @@ router.delete("/:id", checkCampOwnership, function(req, res) {
     });
 });
 
-
-// middleware to verify that user is logged in
-function isLoggedIn(req, res, next) {
-    if(req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect("/login");
-};
-
-// middleware to check if user is owner of post
-function checkCampOwnership(req, res, next) {
-    if (req.isAuthenticated()) {
-        Camp.findById(req.params.id, function (err, foundCamp) {
-            if (err) {
-                /// this sends the user back to the previous page they were on
-                res.redirect("back");
-            } else {
-                /// cannot use foundCamp.author.id === req.user._id because first one is actually a Mongoose object that gets printed out as a string
-                /// so .equals method provided by Mongoose turns it into a string
-                if(foundCamp.author.id.equals(req.user._id)){
-                    next();
-                } else {
-                    res.redirect("back");
-                }
-            }
-        });
-    } else {
-        res.redirect("back");
-    }
-};
 
 module.exports = router;
