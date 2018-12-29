@@ -19,7 +19,8 @@ var campSchema = new mongoose.Schema({
             // "Comment" is the name of the model we are referencing
             ref: "Comment"
         }
-    ]
+    ],
+    price: String
 });
 
 // Makes a model using above schema with methods in it like Camps.find() etc.
