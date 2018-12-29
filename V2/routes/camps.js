@@ -63,6 +63,7 @@ router.get("/:id", function(req, res){
 router.get("/:id/edit", middleware.checkCampOwnership, function (req, res) {
     Camp.findById(req.params.id, function (err, foundCamp) {
         if(err) {
+            req.flash("error", "you do not have authority to edit this");
             res.redirect("back");
         } else {
             res.render("camps/edit", { camp: foundCamp });

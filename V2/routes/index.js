@@ -19,15 +19,17 @@ router.get("/register", function(req, res) {
 // POST:/register
 // handles sign up login
 router.post("/register", function(req, res) {
-    // .register method provided by passport-local-mongoose
     var newUser = new User({username: req.body.username});
+    // .register method provided by passport-local-mongoose
     User.register(newUser, req.body.password, function(err, user) {
         if(err) {
-            console.log(err);
+
+            req.flash("error", err.message);
             return res.redirect("register");
         }
         // telling passport to check/authenticate using 'local' strategy (vs. Google or FB etc.)
         passport.authenticate("local")(req, res, function() {
+            req.flash("success", "Welcome, " + user.username);
             res.redirect("/camps");
         });
     });
@@ -57,12 +59,5 @@ router.get("/logout", function(req, res) {
     res.redirect("/camps");
 });
 
-// DOES NOT SEEM THIS IS NEEDED HERE
-// function isLoggedIn(req, res, next) {
-//     if(req.isAuthenticated()) {
-//         return next();
-//     }
-//     res.redirect("/login");
-// };
 
 module.exports = router;
