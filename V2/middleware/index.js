@@ -17,7 +17,7 @@ middlewareObj.isLoggedIn = function (req, res, next) {
 middlewareObj.checkCampOwnership = function (req, res, next) {
     if (req.isAuthenticated()) {
         Camp.findById(req.params.id, function (err, foundCamp) {
-            if (err) {
+            if (err || !foundCamp) {
                 req.flash("error", "camp not found");
                 /// this sends the user back to the previous page they were on
                 res.redirect("back");
@@ -41,9 +41,10 @@ middlewareObj.checkCampOwnership = function (req, res, next) {
 middlewareObj.checkCommentOwnership = function(req, res, next) {
     if (req.isAuthenticated()) {
         Comment.findById(req.params.comment_id, function (err, foundComment) {
-            if (err) {
+            if (err || !foundComment) {
                 /// this sends the user back to the previous page they were on
                 res.redirect("back");
+                req.flash("error", "comment not found");
             } else {
                 /// cannot use foundCamp.author.id === req.user._id because first one is actually a Mongoose object that gets printed out as a string
                 /// so .equals method provided by Mongoose turns it into a string

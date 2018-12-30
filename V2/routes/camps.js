@@ -9,7 +9,10 @@ var Camp       = require("../models/camp"),
 /// displays all campgrounds
 router.get("/", function(req, res){
     Camp.find({}, function(err, allCamps){
-        if(err){
+        // !foundCamp is in case the camp does not exist/not found
+        if(err || !allCamps){
+            req.flash("error", "Camp not found");
+            res.redirect("back");
             console.log(err);
         } else {
             res.render("camps/index", {camps: allCamps})

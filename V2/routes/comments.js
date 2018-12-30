@@ -51,15 +51,22 @@ router.post("/", middleware.isLoggedIn, function (req, res) {
 });
 
 //  GET:/camps/:id/comments/:comment_id/edit
-/// displays form to edit comment
+/// comment edit form
 router.get("/:comment_id/edit", middleware.checkCommentOwnership, function(req, res) {
-    Comment.findById(req.params.comment_id, function(err, foundComment) {
-        if(err) {
-            res.redirect("back");
-            console.log("error!");
-        } else {
-            res.render("comments/edit", {camp_id: req.params.id, comment: foundComment});
+    // checks to see if Camp exists and returns back if it doesn't
+    Camp.findById(req.params.id, function(err, foundCamp) {
+        if(err || !foundCamp) {
+            req.flash("error", "camp not found");
+            return res.redirect("back");
         }
+        Comment.findById(req.params.comment_id, function(err, foundComment) {
+            if(err) {
+                res.redirect("back");
+                console.log("error!");
+            } else {
+                res.render("comments/edit", {camp_id: req.params.id, comment: foundComment});
+            }
+        });
     });
 });
 
