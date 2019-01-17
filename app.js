@@ -18,7 +18,9 @@ var indexRoutes     = require("./routes/index"),
 
 app.use(bodyParser.urlencoded({extended: true}))
 app.set("view engine", "ejs");
-mongoose.connect("mongodb://localhost:27017/camp", { useNewUrlParser: true });
+// "mongodb://localhost:27017/camp"
+// mongodb://khaled:meswer-wozhig-1voSce@ds159204.mlab.com:59204/prate
+mongoose.connect("mongodb://khaled:meswer-wozhig-1voSce@ds159204.mlab.com:59204/prate", { useNewUrlParser: true });
 // __dirname refers to the directory the current file (app.js) lives in;
 // redundant saftey measure in case directory changes:
 app.use(express.static(__dirname + "/public"))
@@ -57,5 +59,5 @@ app.use("/camps/:id/comments", commentsRoutes);
 
 
 app.listen(8000, function(){
-    console.log("Camp Server");
+    console.log("Prate server running.");
 });
