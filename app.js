@@ -58,6 +58,10 @@ app.use("/camps", campRoutes);
 app.use("/camps/:id/comments", commentsRoutes);
 
 
-app.listen(8000, function(){
+// app.listen(8000, function(){
+//     console.log("Prate server running.");
+// });
+
+app.listen(process.env.PORT, process.env.IP, function(){
     console.log("Prate server running.");
 });
