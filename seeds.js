@@ -2,12 +2,12 @@ var mongoose = require("mongoose");
 var Camp = require("./models/camp");
 var Comment = require("./models/comment");
 
-var data = [
+var seeds = [
     {
         name: "Cloud's Rest",
         img: "http://s3.amazonaws.com/virginiablog/wp-content/uploads/2016/03/16115458/North-Bend-Park-Campground.jpg",
         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus sit maxime obcaecati facilis inventore repudiandae voluptas suscipit, repellendus corporis, dolorum quis adipisci eligendi nihil laboriosam! Cum iusto deserunt suscipit recusandae sed impedit eum, placeat accusantium commodi expedita non error tempora incidunt odit atque harum unde illum distinctio aliquam provident quia!"
-        
+
     },
     {
         name: "2",
@@ -19,45 +19,32 @@ var data = [
         img: "https://blazepress.com/.image/t_share/MTI4OTg4NzQwODc3MDM2MTYz/amazing-camping-tent-view-25.jpg",
         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus sit maxime obcaecati facilis inventore repudiandae voluptas suscipit, repellendus corporis, dolorum quis adipisci eligendi nihil laboriosam! Cum iusto deserunt suscipit recusandae sed impedit eum, placeat accusantium commodi expedita non error tempora incidunt odit atque harum unde illum distinctio aliquam provident quia!"
     }
-]
+];
 
-function seedDB() {
-    // removes all camps
-    Camp.deleteMany({}, function (err) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log("remove campgrounds!");
-            // loop through each camp in var data
-            data.forEach(function (seed) {
-                // then create a camp from each one of the data
-                Camp.create(seed, function (err, camp) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        console.log("added a camp");
-                        // creates a comment
-                        Comment.create(
-                            {
-                                text: "This place is great, but I wish there was Internet",
-                                author: "Sam"
-                            }, function (err, comment) {
-                                if (err) {
-                                    console.log(err);
-                                } else {
-                                    // pushes the comment into comment field in array of camps
-                                    camp.comments.push(comment);
-                                    // saves the camp, with the new added comment
-                                    camp.save();
-                                    console.log("created new comment.");
-                                }
-                            }
-                        );
-                    }
-                });
-            });
+async function seedDB() {
+    try {
+        await Camp.deleteMany({});
+        console.log("Camps removed");
+        await Comment.deleteMany({});
+        console.log("Comments removed");
+
+        for (const seed of seeds) {
+            let camp = await Camp.create(seed);
+            console.log("Camp created");
+            let comment = await Comment.create(
+                {
+                    text: "Nice place.",
+                    author: "Me"
+                }
+            )
+            console.log("Comment created");
+            camp.comments.push(comment);
+            camp.save();
+            console.log("Comment added to camp");
         }
-    });
-}
+    } catch (err) {
+        console.log("Error while seeding:", err);
+    }
+};
 
 module.exports = seedDB;
