@@ -19,9 +19,10 @@ var indexRoutes     = require("./routes/index"),
 app.use(bodyParser.urlencoded({extended: true}))
 app.set("view engine", "ejs");
 
-// mongoose.connect("mongodb://localhost:27017/camp", { useNewUrlParser: true });
-// mongoose.connect("mongodb://khaled:meswer-wozhig-1voSce@ds159204.mlab.com:59204/prate", { useNewUrlParser: true });
+
+// process.env.DATABASEURL localy: process.env.DATABASEURL || process.env.DATABASEURL Heroku: "mongodb://******:*********@ds159204.mlab.com:59204/prate" (mLab database)
 mongoose.connect(process.env.DATABASEURL, { useNewUrlParser: true });
+// mongoose.connect("mongodb://localhost:27017/camp", { useNewUrlParser: true });
 
 // __dirname refers to the directory the current file (app.js) lives in;
 // redundant saftey measure in case directory changes:
@@ -60,13 +61,14 @@ app.use("/camps", campRoutes);
 app.use("/camps/:id/comments", commentsRoutes);
 
 
-app.listen(8000, function(){
-    console.log("Prate server running.");
-});
-
-// app.listen(process.env.PORT, process.env.IP, function(){
+// // For when running locally on node.js
+// app.listen(8000, function(){
 //     console.log("Prate server running.");
-//     console.log("PORT:", process.env.PORT);
-//     console.log("IP:", process.env.IP);
-    
 // });
+
+// For when running on external environment
+app.listen(process.env.PORT, process.env.IP, function(){
+    console.log("Prate server running.");
+    console.log("PORT:", process.env.PORT);
+    console.log("IP:", process.env.IP);
+});
