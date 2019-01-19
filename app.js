@@ -61,14 +61,14 @@ app.use("/camps", campRoutes);
 app.use("/camps/:id/comments", commentsRoutes);
 
 
-// For when running locally on node.js
-app.listen(8000, function(){
-    console.log("Prate server running.");
-});
-
-// // For when running on external environment
-// app.listen(process.env.PORT, process.env.IP, function(){
+// // For when running locally on node.js
+// app.listen(8000, function(){
 //     console.log("Prate server running.");
-//     console.log("PORT:", process.env.PORT);
-//     console.log("IP:", process.env.IP);
 // });
+
+// For when running on external environment
+app.listen(process.env.PORT, process.env.IP, function(){
+    console.log("Prate server running.");
+    console.log("PORT:", process.env.PORT);
+    console.log("IP:", process.env.IP);
+});
