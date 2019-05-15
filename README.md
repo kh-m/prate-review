@@ -1,5 +1,6 @@
 # Prate
-Restaurant review web app
+Campsite Lodging Website
+Website for posting your campsite, to rent
 
 <p align="center">
 <img src="readme_img/node.jpg" width="70px">
